@@ -16,7 +16,7 @@ def multiControllerNet():
     net = Containernet( controller=Controller, switch=OVSSwitch )
 
     info( "*** Creating (reference) controllers\n" )
-    c = RemoteController( 'c', ip='192.168.56.1', port=6653 )
+    c = RemoteController( 'c', ip='172.17.0.1', port=6653 )
 
     info( "*** Creating switches\n" )
     s1 = net.addSwitch( 's1' )
@@ -31,7 +31,7 @@ def multiControllerNet():
     client1 = net.addDocker('client1', ip='10.0.0.111', dimage="khayamgondal/sosagent:v4")
     server1 = net.addDocker('server1', ip='10.0.0.211', dimage="khayamgondal/sosagent:v4")
 
-    controller = net.addDocker('controller', ip='10.0.0.69', dimage="khayamgondal/sosagent:v4", volumes=["/home/ubuntu/sos-for-floodlight:/sos-for-floodlight"])
+    #controller = net.addDocker('controller', ip='10.0.0.69', dimage="khayamgondal/sosagent:v4", volumes=["/home/ubuntu/sos-for-floodlight:/sos-for-floodlight"])
     #client1 = net.addHost('client1', ip='10.0.0.111')
     #server1 = net.addHost('server1', ip='10.0.0.211')
 
@@ -44,8 +44,8 @@ def multiControllerNet():
     net.addLink(s2, server1, port1=1, port2=1)
     net.addLink(s2, agent2,  port1=2, port2=1)
 
-    net.addLink(controller, s1, port1=0, port2=5)
-    net.addLink(controller, s2, port1=1, port2=5)
+    #net.addLink(controller, s1, port1=0, port2=5)
+    #net.addLink(controller, s2, port1=1, port2=5)
 
     info( "*** Starting network\n" )
     net.build()

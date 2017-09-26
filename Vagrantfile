@@ -10,7 +10,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
-
+  #config.vm.network "public_network"
   # use ubuntu 16.04 LTS
   config.vm.box = "ubuntu/xenial64"
 

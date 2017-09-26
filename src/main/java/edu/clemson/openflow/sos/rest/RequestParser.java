@@ -13,8 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class RequestParser {
     private boolean isClientAgent;
     private String transferID;
-    private String clientAgentIP;
-    private String clientAgentPort;
+    private String clientIP;
+    private int clientPort;
     private String serverAgentIP;
     private int numParallelSockets;
     private int bufferSize;
@@ -24,8 +24,8 @@ public class RequestParser {
 
     public RequestParser(@JsonProperty("is-client-agent") boolean isClientAgent,
                          @JsonProperty("transfer-id") String transferID,
-                         @JsonProperty("client-agent-ip") String clientAgentIP,
-                         @JsonProperty("client-agent-port") String clientAgentPort,
+                         @JsonProperty("client-ip") String clientIP,
+                         @JsonProperty("client-port") int clientPort,
                          @JsonProperty("server-agent-ip") String serverAgentIP,
                          @JsonProperty("num-parallel-socks") int numParallelSockets,
                          @JsonProperty("buffer-size") int bufferSize,
@@ -34,8 +34,8 @@ public class RequestParser {
                          @JsonProperty("server-port") String serverPort) {
         this.isClientAgent = isClientAgent;
         this.transferID = transferID;
-        this.clientAgentIP = clientAgentIP;
-        this.clientAgentPort = clientAgentPort;
+        this.clientIP = clientIP;
+        this.clientPort = clientPort;
         this.serverAgentIP = serverAgentIP;
         this.numParallelSockets = numParallelSockets;
         this.bufferSize = bufferSize;
@@ -49,12 +49,12 @@ public class RequestParser {
         return transferID;
     }
 
-    public String getClientAgentIP() {
-        return clientAgentIP;
+    public String getClientIP() {
+        return clientIP;
     }
 
-    public String getClientAgentPort() {
-        return clientAgentPort;
+    public int getClientPort() {
+        return clientPort;
     }
 
     public String getServerAgentIP() {

@@ -5,7 +5,6 @@ import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
-import org.restlet.routing.Router;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +19,7 @@ public class RestServer {
 
     public RestServer() {
         component = new Component();
-        Server server = new Server(Protocol.HTTP, Utils.SERVER_PORT);
+        Server server = new Server(Protocol.HTTP, Utils.REST_SERVER_PORT);
         component.getServers().add(server);
         component.getDefaultHost().attach(getRoutes());
     }
@@ -32,7 +31,7 @@ public class RestServer {
 
     public void startComponent() throws Exception {
         component.start();
-        logger.log(Level.INFO, "Server Started on Port {0}", Utils.SERVER_PORT);
+        logger.log(Level.INFO, "Server Started on Port {0}", Utils.REST_SERVER_PORT);
 
     }
 

@@ -1,6 +1,7 @@
 package edu.clemson.openflow.sos.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.clemson.openflow.sos.host.SocketManager;
 import edu.clemson.openflow.sos.utils.DefaultPrefs;
 import edu.clemson.openflow.sos.utils.LogFormatter;
 import edu.clemson.openflow.sos.utils.Utils;
@@ -32,7 +33,8 @@ public class IncomingRequests extends ServerResource {
             JSONObject request = new JsonRepresentation(entity).getJsonObject();
             RequestParser parsedObject = mapper.readValue(request.toString(), RequestParser.class);
             logger.log(Level.INFO, "New connection request from controller");
-
+            SocketManager socketManager = new SocketManager();
+            socketManager.socketRequest(parsedObject);
 
             Representation response = new StringRepresentation("Valid Request !");
             setStatus(Status.SUCCESS_ACCEPTED);

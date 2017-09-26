@@ -8,7 +8,7 @@ import java.util.logging.Logger;
     kanjam@g.clemson.edu
  */
 public class Utils {
-    public static final int SERVER_PORT = 8002;
+    public static final int REST_SERVER_PORT = 8002;
 
     public static final String BASE_PATH = "/sos";
     public static final String API_VERSION = "/v1.0";
