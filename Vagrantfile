@@ -10,7 +10,13 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
-  #config.vm.network "public_network"
+
+  #Port forwarding: Incase you want to run controller on your host (debugging). You need to forward port to vagrant VM for controller to access
+  # the agents rest server. For each agent you can add line below and then use this host port as agent_rest_port in controller config file.
+  #  config.vm.network "forwarded_port", guest: 8002, host: 9001
+  #  config.vm.network "forwarded_port", guest: 8002, host: 9002
+
+
   # use ubuntu 16.04 LTS
   config.vm.box = "ubuntu/xenial64"
 
