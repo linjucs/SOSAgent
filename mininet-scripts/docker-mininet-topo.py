@@ -9,6 +9,7 @@ from mininet.net import Containernet
 from mininet.node import Controller, OVSSwitch, RemoteController
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
+import os
 
 def multiControllerNet():
     "Create a network from semi-scratch with multiple controllers."
@@ -25,9 +26,13 @@ def multiControllerNet():
     info( "*** Creating hosts\n" )
     #agent1 = net.addHost('agent1', ip='10.0.0.11')
     #agent2 = net.addHost('agent2', ip='10.0.0.21')
-    agent1 = net.addDocker('agent1', ip='10.0.0.11', dimage="khayamgondal/sosagent:v4", volumes=["/home/ubuntu/sos-agent:/sos-agent"])
-    agent2 = net.addDocker('agent2', ip='10.0.0.21', dimage="khayamgondal/sosagent:v4", volumes=["/home/ubuntu/sos-agent:/sos-agent"])
-
+    home_path = os.path.expanduser('~')
+    agent1 = net.addDocker('agent1', ip='10.0.0.11',
+                           dimage="khayamgondal/sosagent:v4",
+                           volumes=[""+home_path+"/SOSAgent:/sos-agent"])
+    agent2 = net.addDocker('agent2', ip='10.0.0.21',
+                           dimage="khayamgondal/sosagent:v4",
+                           volumes=[""+home_path+"/SOSAgent:/sos-agent"])
     client1 = net.addDocker('client1', ip='10.0.0.111', dimage="khayamgondal/sosagent:v4")
     server1 = net.addDocker('server1', ip='10.0.0.211', dimage="khayamgondal/sosagent:v4")
 
