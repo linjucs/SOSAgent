@@ -15,11 +15,12 @@ import java.util.logging.Logger;
 public class RestServer {
     private Component component;
     private static Logger logger = Utils.formatLogger(RestServer.class.getName());
+    protected static final int REST_SERVER_PORT = 8002;
 
 
     public RestServer() {
         component = new Component();
-        Server server = new Server(Protocol.HTTP, Utils.REST_SERVER_PORT);
+        Server server = new Server(Protocol.HTTP, REST_SERVER_PORT);
         component.getServers().add(server);
         component.getDefaultHost().attach(getRoutes());
     }
@@ -30,8 +31,8 @@ public class RestServer {
     }
 
     public void startComponent() throws Exception {
+        logger.log(Level.INFO, "Server started on port {0}", REST_SERVER_PORT);
         component.start();
-        logger.log(Level.INFO, "Server Started on Port {0}", Utils.REST_SERVER_PORT);
 
     }
 

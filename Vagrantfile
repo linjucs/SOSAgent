@@ -18,14 +18,17 @@ Vagrant.configure(2) do |config|
 
 
   # use ubuntu 16.04 LTS
-  config.vm.box = "ubuntu/xenial64"
+  #config.vm.box = "ubuntu/xenial64"
+  #config.vm.box = "geerlingguy/ubuntu1604"
+  config.vm.box = "bento/ubuntu-16.04"
 
   config.vm.synced_folder "containernet/", "/home/ubuntu/containernet"
   config.vm.synced_folder ".", "/home/ubuntu/sos-agent"
   config.vm.synced_folder "../SOSForFloodlight", "/home/ubuntu/sos-for-floodlight"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "containernet"
+    config.vm.network "private_network", :type => 'dhcp', :name => 'vboxnet0', :adapter => 2
+    vb.name = "SOS"
     vb.memory = "1024"
   end
 
