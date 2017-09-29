@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
 Simple test topology for SoS. One agent on each side along with one client and server
@@ -9,7 +9,7 @@ from mininet.net import Containernet
 from mininet.node import Controller, OVSSwitch, RemoteController
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
-import os
+import os, sys
 
 def multiControllerNet():
     "Create a network from semi-scratch with multiple controllers."
@@ -69,4 +69,6 @@ def multiControllerNet():
 
 if __name__ == '__main__':
     setLogLevel( 'info' )  # for CLI output
+    if not os.geteuid() == 0:
+        sys.exit('Script must be run as root')
     multiControllerNet()
