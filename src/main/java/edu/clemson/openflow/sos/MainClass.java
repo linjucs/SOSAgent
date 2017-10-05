@@ -2,10 +2,6 @@ package edu.clemson.openflow.sos;
 
 import edu.clemson.openflow.sos.rest.RestServer;
 import edu.clemson.openflow.sos.utils.DefaultPrefs;
-import edu.clemson.openflow.sos.utils.Utils;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
     @author Khayam Anjam    kanjam@g.clemson.edu

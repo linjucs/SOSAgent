@@ -1,22 +1,18 @@
 package edu.clemson.openflow.sos.rest;
 
 import edu.clemson.openflow.sos.utils.Utils;
-import org.restlet.Application;
-import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
-
-import javax.rmi.CORBA.Util;
 
 /**
     @author Khayam Anjam kanjam@g.clemson.edu
  **/
 
-public class Routes {
+public class RestRoutes {
     private Context context;
 
-    public Routes(Context context) {
+    public RestRoutes(Context context) {
         this.context = context;
     }
 

@@ -17,6 +17,8 @@ tmux split-window -d -t sos:agent1  'sudo docker exec -it mn.agent1 tshark -i ag
 #tmux split-window -d -t sos:agent2  'sudo docker exec -it mn.agent2 tshark -i agent2-eth1'
 
 tmux new-window -d -a -t sos:agent1 -n server1 'sudo docker exec -it mn.server1 python -m SimpleHTTPServer 5201'
+tmux split-window -d -t sos:server1  'sudo docker exec -it mn.server1 tshark -i server1-eth1'
+
 
 tmux new-window -d -a -t sos:agent1 -n client1 'sudo docker exec -it mn.client1 bash'
 tmux split-window -d -t sos:client1 'sudo docker exec -it mn.client1 tshark -i client1-eth1'

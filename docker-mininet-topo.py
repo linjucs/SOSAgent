@@ -8,13 +8,14 @@ Simple test topology for SoS. One agent on each side along with one client and s
 from mininet.net import Containernet
 from mininet.node import Controller, OVSSwitch, RemoteController
 from mininet.cli import CLI
+from mininet.link import TCLink
 from mininet.log import setLogLevel, info
 import os, sys
 
 def multiControllerNet():
     "Create a network from semi-scratch with multiple controllers."
 
-    net = Containernet( controller=Controller, switch=OVSSwitch )
+    net = Containernet( controller=Controller, switch=OVSSwitch, link=TCLink)
 
     info( "*** Creating (reference) controllers\n" )
     c = RemoteController( 'c', ip='172.17.0.1', port=6653 )
@@ -44,7 +45,7 @@ def multiControllerNet():
     net.addLink( s1, client1, port1=1, port2=1)
     net.addLink(s1, agent1, port1=2, port2=1)
 
-    net.addLink( s1, s2 , port1=3, port2=3)
+    net.addLink( s1, s2, delay='100ms', port1=3, port2=3)
 
     net.addLink(s2, server1, port1=1, port2=1)
     net.addLink(s2, agent2,  port1=2, port2=1)
