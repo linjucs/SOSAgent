@@ -11,10 +11,13 @@ from mininet.node import Controller, OVSSwitch, RemoteController
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
 from os import environ
-from mininet.link import TCLink
+from mininet.link import Link, TCLink
 
 from mininet.log import error
 from mininet.util import quietRun, errRun
+import os
+from subprocess import call
+import subprocess
 
 def tunnelX11( node, display=None):
     """Create an X11 tunnel from node:6000 to the root host
@@ -90,9 +93,10 @@ def multiControllerNet():
     net = Mininet( controller=Controller, switch=OVSSwitch, link=TCLink )
 
     info( "*** Creating switches\n" )
-    s1 = net.addSwitch( 's1' )
+    s1 = net.addSwitch( 's1' ) #switches for the data network
     s2 = net.addSwitch( 's2' )
-    s3 = net.addSwitch( 's3' )
+
+    s3 = net.addSwitch( 's3' ) #switch for the control network
 
     info( "*** Creating hosts\n" )
     agent1 = net.addHost('agent1', ip='10.0.0.11')
@@ -101,45 +105,46 @@ def multiControllerNet():
     client1 = net.addHost('client1', ip='10.0.0.111')
     server1 = net.addHost('server1', ip='10.0.0.211')
 
-    controller = net.addHost('controller', ip='10.0.2.150')
+    #controller = net.addHost('controller', ip='10.0.2.150')
 
 
     #controller.cmd("cd  /home/vagrant/sos-for-floodlight && java -jar target/floodlight.jar")
 
-    info( "*** Creating links\n" )
+    info( "*** Creating data links\n" )
 
     net.addLink( s1, client1)
     net.addLink(s1, agent1)
-
     net.addLink( s1, s2 , delay='100ms')
-
     net.addLink(s2,server1)
     net.addLink(s2,agent2)
 
-    net.addLink(s3, controller)
-    net.addLink(s3, agent1)
-    net.addLink(s3, agent2)
+    info( "*** Creating control links\n" )
+    Link(agent1, s3, intfName1='agent1-eth1')
+    agent1.cmd('ifconfig agent1-eth1 192.168.100.1 netmask 255.255.255.0')
+    Link(agent2, s3, intfName1='agent2-eth1')
+    agent2.cmd('ifconfig agent2-eth1 192.168.100.2 netmask 255.255.255.0')
 
 
     info( "*** Starting network\n" )
     net.build()
 
-    makeTerms([agent1, agent2, server1, client1, controller])
+    makeTerms([agent1, agent2, server1, client1])
 
     info( "*** Creating controllers\n" )
-    c1 = net.addController( 'c', port=6633 )
-    c = RemoteController( 'rc', ip='127.0.0.1', port=6653 )
-    c.start()
+    local = net.addController( 'localctl', port=6633 ) #controller for control network
+    local.start()
+    s3.start([local])
 
-    s1.start( [ c ] )
-    s2.start( [ c ] )
-    s3.start([c1])
-    #info( "*** Changing controller to floddlight node\n" )
+    info("*** Assigning IP to host interface\n")
+    #call ('sudo', '/sbin/ifconfig', 's3', '192.168.100.10/24', 'up', shell=True)
+    subprocess.Popen('sudo ifconfig s3 192.168.100.10/24 up', shell=True)
 
-    #rc = RemoteController( 'rc', ip='10.0.0.150', port=6653 )
-    #s1.start( [ rc ] )
-    #s2.start( [ rc ] )
-    #rc.start()
+    remote = RemoteController( 'remotectl', ip='192.168.100.10',
+                               port=6653 ) #controller for data network (floodlight IP)
+    remote.start()
+    s1.start( [ remote ] )
+    s2.start( [ remote] )
+
     #info( "*** Testing network\n" )
     #net.pingAll()
 
@@ -149,7 +154,7 @@ def multiControllerNet():
     #info( "*** Stopping network\n" )
     cleanUpScreens()
     net.stop()
-    c1.stop()
+    local.stop()
 
 if __name__ == '__main__':
     setLogLevel( 'info' )  # for CLI output
