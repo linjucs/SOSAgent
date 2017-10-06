@@ -1,18 +1,33 @@
-**Jo to write :)** 
-- Install git: sudo apt-get install git
--Forked SOSAgent and SOSfor Floodlight repos
--Clone repos to VM in /Home directory
+**Setting up SOS** 
 
-Without Vagrant
--Install mininet: "sudo apt-get install mininet"
--Install JDK8
-  - sudo add-apt-repository ppa:webupd8team/java
-  - sudo apt-get update
-  - sudo apt-get install oracle-java8-installer
--Open IntelliJ
--'Import project'
--Select one of the repos
--Select 'Import project from external module','Maven'
--Click the green + and add JDK, select java-oracle-8
+**1:** Fork _khayamgondal/SOSAgent & khayamgondal/SOSForFloodlight_ to your GitHub account
 
-With Vagrant
+**2:** Setup ssh keys and clone these repos to your home folder
+
+**3:** Install maven, vagrant and virtual box
+
+**4:** Building Agents & Floodlight: _cd SOSAgent/ and mvn package_, similarly 
+_SOSForFloodligh/ mvn package -Dmaven.test.skip=true_. These commands will package .jar files in 
+target/ directory
+
+**5:** cd _SOSAgent_/ and _vagrant up_ . This will bring up the vagrant up. It might take
+some time. Once done do _vagrant ssh_
+
+**6:** _cd sos-agent_ and run sudo python 2hop-mininnet-topo.py script. it will
+ bring up the mininet topology.
+
+**7:** Once its done, You will see multiple xterm sessions on screen. Go to client1
+and try to ping server1 (10.0.0.211). It would be unsuccessful as floodlight is yet 
+not running
+
+**8:** Open another session by _vagrant ssh_ , _cd sos-for-floodlight/_ 
+and run _java -jar target/floodlight.jar_ It will start the controller. Go back
+to client1 and you will see ping going through. 
+
+**9:** Starting Agents: (On agent1 & agent 2)
+cd sos-agent & run java -jar target/sosagent.jar. It 
+will start the agents
+
+**10:** Whitelisting agents: cd sos-for-floodlight/ and run con_whitelist.sh. 
+This file contains the white list entries for controller.
+
