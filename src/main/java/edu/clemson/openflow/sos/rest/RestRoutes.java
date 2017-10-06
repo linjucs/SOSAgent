@@ -19,7 +19,7 @@ public class RestRoutes {
     public Restlet getRoutes() {
         Router router = new Router(context);
         router.attach(Utils.PathBuilder(Utils.HEALTH_PATH), HealthStatus.class);
-        router.attach(Utils.PathBuilder(Utils.REQUEST_PATH), IncomingRequests.class);
+        router.attach(Utils.PathBuilder(Utils.REQUEST_PATH), FloodlightRequest.class);
         return router;
     }
 

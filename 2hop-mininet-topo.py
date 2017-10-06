@@ -95,6 +95,9 @@ def multiControllerNet():
     s1 = net.addSwitch( 's1' ) #switches for the data network
     s2 = net.addSwitch( 's2' )
 
+    s5 = net.addSwitch( 's5')
+    s4 = net.addSwitch( 's4')
+
     s3 = net.addSwitch( 's3' ) #switch for the control network
 
     info( "*** Creating hosts\n" )
@@ -112,10 +115,13 @@ def multiControllerNet():
     info( "*** Creating data links\n" )
 
     net.addLink( s1, client1)
-    net.addLink(s1, agent1)
+    net.addLink(s1, s4)
+    net.addLink(s4, agent1)
+
     net.addLink( s1, s2 , delay='100ms')
     net.addLink(s2,server1)
-    net.addLink(s2,agent2)
+    net.addLink(s2, s5)
+    net.addLink(s5,agent2)
 
     info( "*** Creating control links\n" )
     Link(agent1, s3, intfName1='agent1-eth1')
@@ -143,6 +149,9 @@ def multiControllerNet():
     remote.start()
     s1.start( [ remote ] )
     s2.start( [ remote] )
+    s4.start( [ remote] )
+    s5.start( [ remote] )
+
 
     #info( "*** Testing network\n" )
     #net.pingAll()

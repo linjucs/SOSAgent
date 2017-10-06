@@ -18,9 +18,9 @@ import java.io.IOException;
  * @author Khayam Anjam kanjam@g.clemson.edu
  * This class will receive the requests from controller and will initiate a socket connection for each of the client.
  */
-public class IncomingRequests extends ServerResource {
+public class FloodlightRequest extends ServerResource {
     ObjectMapper mapper = new ObjectMapper();
-    private static final Logger log = LoggerFactory.getLogger(IncomingRequests.class);
+    private static final Logger log = LoggerFactory.getLogger(FloodlightRequest.class);
 
     @Override
     protected Representation post(Representation entity) throws ResourceException {

@@ -26,7 +26,7 @@ public class RestServer {
     }
 
     private Restlet getRoutes() {
-        Routes restRoutes = new RestRoutes(component.getContext().createChildContext());
+        RestRoutes restRoutes = new RestRoutes(component.getContext().createChildContext());
         return restRoutes.getRoutes();
     }
 

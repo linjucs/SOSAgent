@@ -1,6 +1,8 @@
-package edu.clemson.openflow.sos.socks;
+package edu.clemson.openflow.sos.socks.netty;
 
 import edu.clemson.openflow.sos.rest.RequestParser;
+import edu.clemson.openflow.sos.socks.ISocketServer;
+import edu.clemson.openflow.sos.socks.SocketManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -16,15 +18,14 @@ import java.net.InetSocketAddress;
 /**
  * @author Khayam Anjam kanjam@g.clemson.edu
  * this class will start a new thread for every incoming connection from clients
+ * TODO: Before connecting to client, compare its IP address with the one we are getting in requestParser Obj
+ * TODO: Close all the open sockets and socket server on Agent's Shutdown
  */
 public class NettyClientSocket implements ISocketServer {
     protected static boolean isClientHandlerRunning = false;
     private static final Logger log = LoggerFactory.getLogger(SocketManager.class);
 
     private static final int CLIENT_DATA_PORT = 9877;
-
-    private String clientIP;
-    private int clientPort;
 
     public boolean startSocket(int port) {
         NioEventLoopGroup group = new NioEventLoopGroup();
@@ -38,7 +39,7 @@ public class NettyClientSocket implements ISocketServer {
                         public void initChannel(SocketChannel ch)
                                 throws Exception {
                             ch.pipeline().addLast(
-                                    new ServerHandler());
+                                    new ClientSocketHandler());
                         }
                     });
 
