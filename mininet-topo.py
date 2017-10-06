@@ -92,6 +92,7 @@ def multiControllerNet():
     info( "*** Creating switches\n" )
     s1 = net.addSwitch( 's1' )
     s2 = net.addSwitch( 's2' )
+    s3 = net.addSwitch( 's3' )
 
     info( "*** Creating hosts\n" )
     agent1 = net.addHost('agent1', ip='10.0.0.11')
@@ -100,7 +101,7 @@ def multiControllerNet():
     client1 = net.addHost('client1', ip='10.0.0.111')
     server1 = net.addHost('server1', ip='10.0.0.211')
 
-    #controller = net.addHost('controller', ip='10.0.0.150')
+    controller = net.addHost('controller', ip='10.0.2.150')
 
 
     #controller.cmd("cd  /home/vagrant/sos-for-floodlight && java -jar target/floodlight.jar")
@@ -109,30 +110,36 @@ def multiControllerNet():
 
     net.addLink( s1, client1)
     net.addLink(s1, agent1)
-    #net.addLink(s1, controller)
 
     net.addLink( s1, s2 , delay='100ms')
 
     net.addLink(s2,server1)
     net.addLink(s2,agent2)
-    #net.addLink(s2, controller)
+
+    net.addLink(s3, controller)
+    net.addLink(s3, agent1)
+    net.addLink(s3, agent2)
 
 
     info( "*** Starting network\n" )
     net.build()
 
-    makeTerms([agent1, agent2, server1, client1])
+    makeTerms([agent1, agent2, server1, client1, controller])
 
-    info( "*** Creating (reference) controllers\n" )
-    c = RemoteController( 'c', ip='127.0.0.1', port=6653 )
-    #c = net.addController( 'c', port=6633 )
-
+    info( "*** Creating controllers\n" )
+    c1 = net.addController( 'c', port=6633 )
+    c = RemoteController( 'rc', ip='127.0.0.1', port=6653 )
     c.start()
 
     s1.start( [ c ] )
     s2.start( [ c ] )
+    s3.start([c1])
+    #info( "*** Changing controller to floddlight node\n" )
 
-
+    #rc = RemoteController( 'rc', ip='10.0.0.150', port=6653 )
+    #s1.start( [ rc ] )
+    #s2.start( [ rc ] )
+    #rc.start()
     #info( "*** Testing network\n" )
     #net.pingAll()
 
@@ -142,6 +149,7 @@ def multiControllerNet():
     #info( "*** Stopping network\n" )
     cleanUpScreens()
     net.stop()
+    c1.stop()
 
 if __name__ == '__main__':
     setLogLevel( 'info' )  # for CLI output
