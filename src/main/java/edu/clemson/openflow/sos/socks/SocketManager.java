@@ -25,8 +25,8 @@ public class SocketManager {
 
     private boolean startClientChannel(RequestParser request) {
 
-        NettyClientSocket nettyClientSocket = new NettyClientSocket();
-        return nettyClientSocket.start(request);
+        NettyClientSocket nettyClientSocket = new NettyClientSocket(request);
+        return nettyClientSocket.start();
     }
 
 }

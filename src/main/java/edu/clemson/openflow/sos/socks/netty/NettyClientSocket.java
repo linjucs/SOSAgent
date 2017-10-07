@@ -18,14 +18,16 @@ import java.net.InetSocketAddress;
 /**
  * @author Khayam Anjam kanjam@g.clemson.edu
  * this class will start a new thread for every incoming connection from clients
- * TODO: Before connecting to client, compare its IP address with the one we are getting in requestParser Obj
- * TODO: Close all the open sockets and socket server on Agent's Shutdown
  */
 public class NettyClientSocket implements ISocketServer {
     protected static boolean isClientHandlerRunning = false;
     private static final Logger log = LoggerFactory.getLogger(SocketManager.class);
-
+    private RequestParser request;
     private static final int CLIENT_DATA_PORT = 9877;
+
+    public NettyClientSocket (RequestParser request) {
+        this.request = request;
+    }
 
     public boolean startSocket(int port) {
         NioEventLoopGroup group = new NioEventLoopGroup();
@@ -39,7 +41,7 @@ public class NettyClientSocket implements ISocketServer {
                         public void initChannel(SocketChannel ch)
                                 throws Exception {
                             ch.pipeline().addLast(
-                                    new ClientSocketHandler());
+                                    new ClientSocketHandler(request));
                         }
                     });
 
@@ -59,7 +61,7 @@ public class NettyClientSocket implements ISocketServer {
     }
 
     @Override
-    public boolean start(RequestParser requestParser) {
+    public boolean start() {
         if (!isClientHandlerRunning) {
             isClientHandlerRunning = true;
             return startSocket(CLIENT_DATA_PORT);
