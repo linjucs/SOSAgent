@@ -29,7 +29,8 @@ public class ClientSocketHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         InetAddress inetaddress = socketAddress.getAddress();
-        String ipAddress = inetaddress.getHostAddress(); // IP address of client
-        log.info("New Client connected IP {} Port {}", socketAddress.getHostName(), socketAddress.getPort());
+        log.info("New Client connected IP {} Port {}",
+                socketAddress.getHostName(),
+                socketAddress.getPort());
     }
 }

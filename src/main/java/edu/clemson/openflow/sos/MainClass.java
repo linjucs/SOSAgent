@@ -1,7 +1,7 @@
 package edu.clemson.openflow.sos;
 
 import edu.clemson.openflow.sos.rest.RestServer;
-import edu.clemson.openflow.sos.utils.DefaultPrefs;
+import edu.clemson.openflow.sos.utils.PrefsSetup;
 
 /**
     @author Khayam Anjam    kanjam@g.clemson.edu
@@ -10,9 +10,11 @@ import edu.clemson.openflow.sos.utils.DefaultPrefs;
 public class MainClass {
 
     public static void main(String[] args) {
-        DefaultPrefs.loadDefault(); //load default settings
-        RestServer restServer = new RestServer();
+        PrefsSetup prefsSetup = new PrefsSetup();
+        prefsSetup.loadDefault(); //load default settings
+
         try {
+            RestServer restServer = new RestServer();
             restServer.startComponent();
         } catch (Exception e) {
             e.printStackTrace();

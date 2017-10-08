@@ -4,8 +4,6 @@ import edu.clemson.openflow.sos.rest.RequestParser;
 import edu.clemson.openflow.sos.socks.netty.NettyClientSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 /**
  * @author Khayam Gondal kanjam@g.clemson.edu
  *

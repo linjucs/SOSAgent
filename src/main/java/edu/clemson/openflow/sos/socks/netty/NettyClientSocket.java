@@ -1,6 +1,7 @@
 package edu.clemson.openflow.sos.socks.netty;
 
 import edu.clemson.openflow.sos.rest.RequestParser;
+import edu.clemson.openflow.sos.socks.IClientSocketServer;
 import edu.clemson.openflow.sos.socks.ISocketServer;
 import edu.clemson.openflow.sos.socks.SocketManager;
 import io.netty.bootstrap.ServerBootstrap;
@@ -19,11 +20,12 @@ import java.net.InetSocketAddress;
  * @author Khayam Anjam kanjam@g.clemson.edu
  * this class will start a new thread for every incoming connection from clients
  */
-public class NettyClientSocket implements ISocketServer {
+public class NettyClientSocket implements IClientSocketServer {
     protected static boolean isClientHandlerRunning = false;
     private static final Logger log = LoggerFactory.getLogger(SocketManager.class);
     private RequestParser request;
     private static final int CLIENT_DATA_PORT = 9877;
+    private static final int MAX_CLIENTS = 5;
 
     public NettyClientSocket (RequestParser request) {
         this.request = request;
@@ -67,5 +69,10 @@ public class NettyClientSocket implements ISocketServer {
             return startSocket(CLIENT_DATA_PORT);
         }
         return true;
+    }
+
+    @Override
+    public int getActiveConnections() {
+        return 0;
     }
 }
