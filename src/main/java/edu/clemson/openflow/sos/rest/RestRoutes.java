@@ -1,6 +1,5 @@
 package edu.clemson.openflow.sos.rest;
 
-import edu.clemson.openflow.sos.utils.Utils;
 import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;

@@ -1,21 +1,11 @@
 package edu.clemson.openflow.sos.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.clemson.openflow.sos.utils.PrefsSetup;
-import edu.clemson.openflow.sos.utils.Utils;
-import org.json.JSONObject;
-import org.restlet.data.Status;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import org.slf4j.LoggerFactory;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * @author Khayam Anjam kanjam@g.clemson.edu
