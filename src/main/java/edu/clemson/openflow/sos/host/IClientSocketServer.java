@@ -1,4 +1,4 @@
-package edu.clemson.openflow.sos.socks;
+package edu.clemson.openflow.sos.host;
 
 public interface IClientSocketServer extends ISocketServer {
     /**

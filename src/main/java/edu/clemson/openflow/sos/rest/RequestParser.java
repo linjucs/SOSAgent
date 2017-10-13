@@ -27,7 +27,7 @@ public class RequestParser {
                          @JsonProperty("client-ip") String clientIP,
                          @JsonProperty("client-port") int clientPort,
                          @JsonProperty("server-agent-ip") String serverAgentIP,
-                         @JsonProperty("num-parallel-socks") int numParallelSockets,
+                         @JsonProperty("num-parallel-host") int numParallelSockets,
                          @JsonProperty("buffer-size") int bufferSize,
                          @JsonProperty("queue-capacity") int queueCapacity,
                          @JsonProperty("server-ip") String serverIP,

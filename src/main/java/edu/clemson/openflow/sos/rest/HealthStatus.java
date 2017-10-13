@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author Khayam Anjam kanjam@g.clemson.edu
  * Class to return the agent status to the controller. Such as How many no. of clients this
  * agent supports, underlying agent2agent technology it supports. Controller need to make decision
- * based on these matrics. socket technology being used i.e java socks, netty etc
+ * based on these matrics. socket technology being used i.e java host, netty etc
  * TODO: return no. of active client connections.
  * TODO: Write the post call to be able to config agent i.e. drivers & max supported clients
  */

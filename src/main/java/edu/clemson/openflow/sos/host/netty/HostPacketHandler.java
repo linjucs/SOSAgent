@@ -1,16 +1,15 @@
-package edu.clemson.openflow.sos.socks.netty;
+package edu.clemson.openflow.sos.host.netty;
 
-import com.sun.org.apache.regexp.internal.RE;
 import edu.clemson.openflow.sos.rest.RequestParser;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 /**
@@ -18,25 +17,31 @@ import java.net.InetSocketAddress;
  *  * TODO: Before connecting to client, compare its IP address with the one we are getting in requestParser Obj
 
  */
-public class ClientSocketHandler extends ChannelInboundHandlerAdapter {
-    private static final Logger log = LoggerFactory.getLogger(ClientSocketHandler.class);
+@ChannelHandler.Sharable
+public class HostPacketHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger log = LoggerFactory.getLogger(HostPacketHandler.class);
     private RequestParser request;
 
-    public ClientSocketHandler(RequestParser request) {
+    public HostPacketHandler(RequestParser request) {
         this.request = request;
-        log.info("Expecting client IP {} Port {}",
+        log.info("Expecting Host at IP {} Port {}",
                 request.getClientIP(), request.getClientPort());
+    }
+
+    public void setRequestObject(RequestParser requestObject) {
+        this.request = requestObject;
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         // Discard the received data silently.
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-        log.info("Got Message from {} at {}. Message is {}",
+        log.info("Got Message from {} at Port {}",
                 socketAddress.getHostName(),
-                socketAddress.getPort(),
-                msg.toString());
-        ((ByteBuf) msg).release();
+                socketAddress.getPort());
+        FullHttpRequest request = (FullHttpRequest) msg;
+        log.info(request.uri());
+        //((ByteBuf) msg).release();
     }
 
     @Override

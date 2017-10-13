@@ -1,4 +1,6 @@
-package edu.clemson.openflow.sos.socks;
+package edu.clemson.openflow.sos.host;
+
+import edu.clemson.openflow.sos.rest.RequestParser;
 
 /**
  * @author Khayam Gondal kanjam@g.clemson.edu
@@ -11,4 +13,5 @@ public interface ISocketServer {
      You can have your own strategies on how to handle the traffic i.e. types of sockets you wanna use.
      **/
     boolean start();
+
 }

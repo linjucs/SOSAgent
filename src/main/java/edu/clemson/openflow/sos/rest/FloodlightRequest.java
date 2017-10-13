@@ -1,7 +1,7 @@
 package edu.clemson.openflow.sos.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.clemson.openflow.sos.socks.SocketManager;
+import edu.clemson.openflow.sos.host.SocketManager;
 import org.json.JSONObject;
 import org.restlet.data.Status;
 import org.restlet.ext.json.JsonRepresentation;

@@ -1,4 +1,4 @@
-package edu.clemson.openflow.sos.socks.netty;
+package edu.clemson.openflow.sos.host.netty;
 
 /**
  * @author Khayam Gondal kanjam@g.clemson.edu

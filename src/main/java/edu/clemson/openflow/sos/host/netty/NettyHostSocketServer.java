@@ -1,9 +1,8 @@
-package edu.clemson.openflow.sos.socks.netty;
+package edu.clemson.openflow.sos.host.netty;
 
 import edu.clemson.openflow.sos.rest.RequestParser;
-import edu.clemson.openflow.sos.socks.IClientSocketServer;
-import edu.clemson.openflow.sos.socks.ISocketServer;
-import edu.clemson.openflow.sos.socks.SocketManager;
+import edu.clemson.openflow.sos.host.IClientSocketServer;
+import edu.clemson.openflow.sos.host.SocketManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -20,18 +19,18 @@ import java.net.InetSocketAddress;
  * @author Khayam Anjam kanjam@g.clemson.edu
  * this class will start a new thread for every incoming connection from clients
  */
-public class NettyClientSocket implements IClientSocketServer {
+public class NettyHostSocketServer implements IClientSocketServer {
     protected static boolean isClientHandlerRunning = false;
     private static final Logger log = LoggerFactory.getLogger(SocketManager.class);
-    private RequestParser request;
     private static final int CLIENT_DATA_PORT = 9877;
     private static final int MAX_CLIENTS = 5;
+    private HostPacketHandler hostPacketHandler;
 
-    public NettyClientSocket (RequestParser request) {
-        this.request = request;
+    public NettyHostSocketServer(RequestParser request) {
+        hostPacketHandler = new HostPacketHandler(request);
     }
 
-    public boolean startSocket(int port) {
+    private boolean startSocket(int port) {
         NioEventLoopGroup group = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
@@ -43,18 +42,18 @@ public class NettyClientSocket implements IClientSocketServer {
                         public void initChannel(SocketChannel ch)
                                 throws Exception {
                             ch.pipeline().addLast(
-                                    new ClientSocketHandler(request));
+                                    hostPacketHandler);
                         }
                     });
 
             ChannelFuture f = b.bind().sync();
-            log.info("Started client-side socket server at Port {}",CLIENT_DATA_PORT);
+            log.info("Started host-side socket server at Port {}",CLIENT_DATA_PORT);
             return true;
             // Need to do socket closing handling. close all the remaining open sockets
             //System.out.println(EchoServer.class.getName() + " started and listen on " + f.channel().localAddress());
             //f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            log.error("Error starting socket client-side socket");
+            log.error("Error starting host-side socket");
             e.printStackTrace();
             return false;
         } finally {
@@ -64,12 +63,14 @@ public class NettyClientSocket implements IClientSocketServer {
 
     @Override
     public boolean start() {
+
         if (!isClientHandlerRunning) {
             isClientHandlerRunning = true;
             return startSocket(CLIENT_DATA_PORT);
         }
         return true;
     }
+
 
     @Override
     public int getActiveConnections() {

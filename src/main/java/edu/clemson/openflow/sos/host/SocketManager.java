@@ -1,7 +1,7 @@
-package edu.clemson.openflow.sos.socks;
+package edu.clemson.openflow.sos.host;
 
 import edu.clemson.openflow.sos.rest.RequestParser;
-import edu.clemson.openflow.sos.socks.netty.NettyClientSocket;
+import edu.clemson.openflow.sos.host.netty.NettyHostSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
@@ -15,16 +15,16 @@ public class SocketManager {
 
 
     public boolean socketRequest(RequestParser request) {
-        if (request.isClientAgent()) {
+       // if (request.isClientAgent()) {
             return startClientChannel(request);
-        }
-        return true;
+      //  }
+       // return true;
     }
 
     private boolean startClientChannel(RequestParser request) {
 
-        NettyClientSocket nettyClientSocket = new NettyClientSocket(request);
-        return nettyClientSocket.start();
+        NettyHostSocketServer nettyHostSocketServer = new NettyHostSocketServer(request);
+        return nettyHostSocketServer.start();
     }
 
 }
