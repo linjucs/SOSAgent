@@ -7,6 +7,6 @@ public class HostServerChannelInitializer extends ChannelInitializer<SocketChann
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         socketChannel.pipeline().addLast(
-                new HostServerPacketHandler());
+                new HostServerChannelHandler());
     }
 }

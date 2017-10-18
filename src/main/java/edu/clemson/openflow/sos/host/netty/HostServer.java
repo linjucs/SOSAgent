@@ -22,11 +22,6 @@ public class HostServer implements IClientSocketServer {
     private static final Logger log = LoggerFactory.getLogger(SocketManager.class);
     private static final int DATA_PORT = 9877;
     private static final int MAX_CLIENTS = 5;
-    private static RequestParser requestParser;
-
-    public HostServer(RequestParser requestParser) {
-        this.requestParser = requestParser;
-    }
 
     private boolean startSocket(int port) {
         NioEventLoopGroup group = new NioEventLoopGroup();
@@ -55,12 +50,7 @@ public class HostServer implements IClientSocketServer {
 
     @Override
     public boolean start() {
-
-        if (!isHandlerRunning) {
-            isHandlerRunning = true;
-            return startSocket(DATA_PORT);
-        }
-        return true;
+        return startSocket(DATA_PORT);
     }
 
 

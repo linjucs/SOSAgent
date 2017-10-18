@@ -15,16 +15,12 @@ public class SocketManager {
 
 
     public boolean socketRequest(RequestParser request) {
-       // if (request.isClientAgent()) {
-            return startClientChannel(request);
-      //  }
-       // return true;
+        // check all the logistics before adding request to pool i.e is the server running or not
+        // for now I am adding all requests to pool
+        RequestManager.incomingRequests.add(request);
+        log.debug("Added {} to the Request Pool", request.toString()); // need to override tostring yet
+        return true;
     }
 
-    private boolean startClientChannel(RequestParser request) {
-
-        HostServer hostServer = new HostServer(request);
-        return hostServer.start();
-    }
 
 }

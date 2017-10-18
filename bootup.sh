@@ -3,8 +3,8 @@
 #author Khayam Anjam kanjam@g.clemson.edu
 
 if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
+    echo "This script must be run as root" 1>&2
+    exit 1
 fi
 
 tmux new-session -d -s sos -n floodlight 'sudo service openvswitch-switch start && sudo python /home/vagrant/sos-agent/2hop-mininet-topo.py'

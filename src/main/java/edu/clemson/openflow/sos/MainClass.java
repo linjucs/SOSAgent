@@ -1,5 +1,6 @@
 package edu.clemson.openflow.sos;
 
+import edu.clemson.openflow.sos.host.netty.HostServer;
 import edu.clemson.openflow.sos.rest.RestServer;
 import edu.clemson.openflow.sos.utils.PrefsSetup;
 
@@ -13,11 +14,14 @@ public class MainClass {
         PrefsSetup prefsSetup = new PrefsSetup();
         prefsSetup.loadDefault(); //load default settings
 
-        try {
+        try { //Start rest server
             RestServer restServer = new RestServer();
             restServer.startComponent();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        HostServer hostServer = new HostServer(); //Start hostServer
+        hostServer.start();
+
     }
 }
