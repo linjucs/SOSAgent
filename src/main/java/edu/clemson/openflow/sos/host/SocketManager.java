@@ -1,7 +1,7 @@
 package edu.clemson.openflow.sos.host;
 
+import edu.clemson.openflow.sos.host.netty.HostServer;
 import edu.clemson.openflow.sos.rest.RequestParser;
-import edu.clemson.openflow.sos.host.netty.NettyHostSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
@@ -23,8 +23,8 @@ public class SocketManager {
 
     private boolean startClientChannel(RequestParser request) {
 
-        NettyHostSocketServer nettyHostSocketServer = new NettyHostSocketServer(request);
-        return nettyHostSocketServer.start();
+        HostServer hostServer = new HostServer(request);
+        return hostServer.start();
     }
 
 }

@@ -5,8 +5,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,11 +16,11 @@ import java.net.InetSocketAddress;
 
  */
 @ChannelHandler.Sharable
-public class HostPacketHandler extends ChannelInboundHandlerAdapter {
-    private static final Logger log = LoggerFactory.getLogger(HostPacketHandler.class);
+public class HostServerPacketHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger log = LoggerFactory.getLogger(HostServerPacketHandler.class);
     private RequestParser request;
 
-    public HostPacketHandler(RequestParser request) {
+    public HostServerPacketHandler() {
         this.request = request;
         log.info("Expecting Host at IP {} Port {}",
                 request.getClientIP(), request.getClientPort());
@@ -39,8 +37,9 @@ public class HostPacketHandler extends ChannelInboundHandlerAdapter {
         log.info("Got Message from {} at Port {}",
                 socketAddress.getHostName(),
                 socketAddress.getPort());
-        FullHttpRequest request = (FullHttpRequest) msg;
-        log.info(request.uri());
+        ByteBuf m = (ByteBuf) msg;
+        //FullHttpRequest request = (FullHttpRequest) msg;
+        log.info(m.toString());
         //((ByteBuf) msg).release();
     }
 
