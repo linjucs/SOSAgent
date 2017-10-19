@@ -1,5 +1,7 @@
 package edu.clemson.openflow.sos.host.netty;
 
+import edu.clemson.openflow.sos.host.RequestManager;
+import edu.clemson.openflow.sos.host.SocketManager;
 import edu.clemson.openflow.sos.rest.RequestParser;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -15,14 +17,18 @@ import java.net.InetSocketAddress;
  *  * TODO: Before connecting to client, compare its IP address with the one we are getting in requestParser Obj
 
  */
-@ChannelHandler.Sharable
 public class HostServerChannelHandler extends ChannelInboundHandlerAdapter {
     private static final Logger log = LoggerFactory.getLogger(HostServerChannelHandler.class);
 
     public HostServerChannelHandler() {
     }
 
-    private RequestParser getRequest(String IP) { // search the request manager pool to find current request
+    private RequestParser getRequest(String IP, int port) { // search the request manager pool to find current request
+        for (RequestParser request : RequestManager.incomingRequests) {
+            if (request.getClientIP().equals(IP) &&
+                    request.getClientPort() == port) return request;
+            else return null;
+        }
         throw  new NullPointerException();
     }
     @Override
@@ -31,7 +37,9 @@ public class HostServerChannelHandler extends ChannelInboundHandlerAdapter {
         log.info("Got Message from {} at Port {}",
                 socketAddress.getHostName(),
                 socketAddress.getPort());
+
         // TODO: Validate this host
+
         ByteBuf m = (ByteBuf) msg;
         ((ByteBuf) msg).release();
     }
