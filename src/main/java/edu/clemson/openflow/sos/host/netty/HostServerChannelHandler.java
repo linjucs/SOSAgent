@@ -1,10 +1,10 @@
 package edu.clemson.openflow.sos.host.netty;
 
-import edu.clemson.openflow.sos.host.RequestManager;
-import edu.clemson.openflow.sos.host.SocketManager;
+import edu.clemson.openflow.sos.agent.netty.AgentClient;
+import edu.clemson.openflow.sos.manager.RequestManager;
 import edu.clemson.openflow.sos.rest.RequestParser;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
@@ -19,29 +19,33 @@ import java.net.InetSocketAddress;
  */
 public class HostServerChannelHandler extends ChannelInboundHandlerAdapter {
     private static final Logger log = LoggerFactory.getLogger(HostServerChannelHandler.class);
+    private RequestParser request;
+    private Channel channel;
 
-    public HostServerChannelHandler() {
-    }
-
-    private RequestParser getRequest(String IP, int port) { // search the request manager pool to find current request
-        for (RequestParser request : RequestManager.incomingRequests) {
-            if (request.getClientIP().equals(IP) &&
-                    request.getClientPort() == port) return request;
-            else return null;
-        }
-        throw  new NullPointerException();
-    }
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-        log.info("Got Message from {} at Port {}",
+        log.info("New host-side connection from {} at Port {}",
                 socketAddress.getHostName(),
                 socketAddress.getPort());
+        this.request = RequestManager.getRequest(socketAddress.getHostName(), socketAddress.getPort());
+        AgentClient agentClient = new AgentClient(request.getServerAgentIP());
+        agentClient.start();
+        this.channel = agentClient.getChannel();
 
-        // TODO: Validate this host
+    }
 
-        ByteBuf m = (ByteBuf) msg;
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+
+        //ByteBuf m = (ByteBuf) msg;
+        if (channel != null) {
+            channel.write("hello");}
+            else {
+            log.error("Couldn't connect to remote agent {}", request.getServerAgentIP());
+        }
         ((ByteBuf) msg).release();
+
     }
 
     @Override
@@ -51,4 +55,7 @@ public class HostServerChannelHandler extends ChannelInboundHandlerAdapter {
         ctx.close();
     }
 
+    private void forwardMessage(ByteBuf msg) {
+
+    }
 }

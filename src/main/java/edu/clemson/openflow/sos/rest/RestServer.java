@@ -28,7 +28,7 @@ public class RestServer {
     }
 
     public void startComponent() throws Exception {
-        log.info("Server started on port {}", REST_SERVER_PORT);
+        log.info("Rest Server started on port {}", REST_SERVER_PORT);
         component.start();
 
     }

@@ -1,6 +1,4 @@
-package edu.clemson.openflow.sos.host;
-
-import edu.clemson.openflow.sos.rest.RequestParser;
+package edu.clemson.openflow.sos.manager;
 
 /**
  * @author Khayam Gondal kanjam@g.clemson.edu

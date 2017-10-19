@@ -1,6 +1,5 @@
-package edu.clemson.openflow.sos.host;
+package edu.clemson.openflow.sos.manager;
 
-import edu.clemson.openflow.sos.host.netty.HostServer;
 import edu.clemson.openflow.sos.rest.RequestParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,7 @@ public class SocketManager {
     public boolean socketRequest(RequestParser request) {
         // check all the logistics before adding request to pool i.e is the server running or not
         // for now I am adding all requests to pool
-        RequestManager.incomingRequests.add(request);
+        RequestManager.addToPool(request);
         log.debug("Added {} to the Request Pool", request.toString()); // need to override tostring yet
         return true;
     }
