@@ -16,27 +16,31 @@ public class RequestParser {
     private String clientIP;
     private int clientPort;
     private String serverAgentIP;
+    private String clientAgentIP;
     private int numParallelSockets;
     private int bufferSize;
     private int queueCapacity;
     private String serverIP;
-    private String serverPort;
+    private int serverPort;
+
 
     public RequestParser(@JsonProperty("is-client-agent") boolean isClientAgent,
                          @JsonProperty("transfer-id") String transferID,
                          @JsonProperty("client-ip") String clientIP,
                          @JsonProperty("client-port") int clientPort,
                          @JsonProperty("server-agent-ip") String serverAgentIP,
+                         @JsonProperty("client-agent-ip") String clientAgentIP,
                          @JsonProperty("num-parallel-host") int numParallelSockets,
                          @JsonProperty("buffer-size") int bufferSize,
                          @JsonProperty("queue-capacity") int queueCapacity,
                          @JsonProperty("server-ip") String serverIP,
-                         @JsonProperty("server-port") String serverPort) {
+                         @JsonProperty("server-port") int serverPort) {
         this.isClientAgent = isClientAgent;
         this.transferID = transferID;
         this.clientIP = clientIP;
         this.clientPort = clientPort;
         this.serverAgentIP = serverAgentIP;
+        this.clientAgentIP = clientAgentIP;
         this.numParallelSockets = numParallelSockets;
         this.bufferSize = bufferSize;
         this.queueCapacity = queueCapacity;
@@ -81,7 +85,11 @@ public class RequestParser {
         return serverIP;
     }
 
-    public String getServerPort() {
+    public String getClientAgentIP() {
+        return clientAgentIP;
+    }
+
+    public int getServerPort() {
         return serverPort;
     }
 }

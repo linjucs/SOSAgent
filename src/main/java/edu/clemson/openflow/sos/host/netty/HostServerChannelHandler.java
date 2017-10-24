@@ -45,8 +45,7 @@ public class HostServerChannelHandler extends ChannelInboundHandlerAdapter {
         if (channel != null) {
             log.info("got packet from client");
 
-            //channel.writeAndFlush("hello");
-            channel.writeAndFlush(msg);
+            channel.writeAndFlush(msg); // will be moved to agent server channel handler
 
             }
             else {
