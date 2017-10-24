@@ -33,9 +33,6 @@ public class AgentClient {
             this.channel = channel;
             log.info("Connected to Agent-Server {} on Port {}", agentServerIP, AGENT_DATA_PORT);
 
-         //   channel.write("Hi\n");
-         //   channel.write("Hi\n");
-         //   channel.write("Hi\n");
 
         } catch (Exception e) {
             log.error("Error connecting to Agent-Server {} on Port{}", agentServerIP, AGENT_DATA_PORT);

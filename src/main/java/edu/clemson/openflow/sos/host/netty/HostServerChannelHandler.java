@@ -7,6 +7,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.bytes.ByteArrayDecoder;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +42,17 @@ public class HostServerChannelHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        //ByteBuf m = (ByteBuf) msg;
         if (channel != null) {
-            channel.write("hello");}
+            log.info("got packet from client");
+
+            //channel.writeAndFlush("hello");
+            channel.writeAndFlush(msg);
+
+            }
             else {
             log.error("Couldn't connect to remote agent {}", request.getServerAgentIP());
         }
-        ((ByteBuf) msg).release();
+        ReferenceCountUtil.release(msg);
 
     }
 

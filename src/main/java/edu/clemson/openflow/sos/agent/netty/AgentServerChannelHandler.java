@@ -20,4 +20,12 @@ public class AgentServerChannelHandler extends ChannelInboundHandlerAdapter {
                 socketAddress.getPort());
 
     }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        log.info("received packet from other agent");
+
+        byte[] m = (byte[] ) msg;
+        log.info(new String(m));
+    }
 }
