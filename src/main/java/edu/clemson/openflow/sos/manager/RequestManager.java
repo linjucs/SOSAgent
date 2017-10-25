@@ -5,18 +5,19 @@ import edu.clemson.openflow.sos.rest.RequestParser;
 
 import java.util.ArrayList;
 
-public class RequestManager {
-    private static ArrayList<RequestParser> incomingRequests = new ArrayList<>();
+public enum RequestManager {
+    INSTANCE;
+    private ArrayList<RequestParser> incomingRequests = new ArrayList<>();
 
-    public static void addToPool(RequestParser request) {
+    public void addToPool(RequestParser request) {
         incomingRequests.add(request);
     }
 
-    public static ArrayList<RequestParser> getRequests() {
+    public ArrayList<RequestParser> getRequests() {
         return incomingRequests;
     }
-    //TODO: define enum to differentiate between req from client and client-agents
-    public static RequestParser getRequest(String IP, int port) throws RequestNotFoundException {
+
+    public RequestParser getRequest(String IP, int port) throws RequestNotFoundException {
         for (RequestParser request : incomingRequests) {
             if ((request.getClientIP().equals(IP) &&
                     request.getClientPort() == port)  ||

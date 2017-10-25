@@ -2,6 +2,8 @@ package edu.clemson.openflow.sos.agent.netty;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -13,14 +15,17 @@ public class AgentClient {
 
     private static final int AGENT_DATA_PORT = 9878;
     private String agentServerIP;
-    private Channel channel;
 
-    public AgentClient (String agentServerIP) {
+    private Channel remoteChannel;
+    private Channel myChannel;
+
+    public AgentClient (String agentServerIP, Channel remoteChannel) {
         this.agentServerIP = agentServerIP;
+        this.remoteChannel = remoteChannel;
     }
 
-    public Channel getChannel() {
-        return channel;
+    public Channel getRemoteChannel() {
+        return myChannel;
     }
 
     public void start() {
@@ -28,9 +33,9 @@ public class AgentClient {
         try {
             Bootstrap bootstrap = new Bootstrap().group(group)
                     .channel(NioSocketChannel.class)
-                    .handler(new AgentClientChannelInitializer());
-            Channel channel = bootstrap.connect(agentServerIP, AGENT_DATA_PORT).sync().channel();
-            this.channel = channel;
+                    .handler(new AgentClientChannelInitializer(remoteChannel));
+
+            this.myChannel = bootstrap.connect(agentServerIP, AGENT_DATA_PORT).sync().channel();
             log.info("Connected to Agent-Server {} on Port {}", agentServerIP, AGENT_DATA_PORT);
 
 

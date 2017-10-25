@@ -4,7 +4,6 @@ import edu.clemson.openflow.sos.host.netty.HostClient;
 import edu.clemson.openflow.sos.manager.RequestManager;
 import edu.clemson.openflow.sos.rest.RequestParser;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -16,7 +15,7 @@ import java.net.InetSocketAddress;
 public class AgentServerChannelHandler extends ChannelInboundHandlerAdapter {
     private static final Logger log = LoggerFactory.getLogger(AgentServerChannelHandler.class);
     private RequestParser request;
-    private Channel channel;
+    private Channel remoteChannel;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -24,11 +23,14 @@ public class AgentServerChannelHandler extends ChannelInboundHandlerAdapter {
         log.info("New agent-side connection from {} at Port {}",
                 socketAddress.getHostName(),
                 socketAddress.getPort());
-        this.request = RequestManager.getRequest(socketAddress.getHostName(), socketAddress.getPort());
-        HostClient hostClient = new HostClient(request.getServerIP(), request.getServerPort());
 
+        RequestManager requestManager = RequestManager.INSTANCE;
+        this.request = requestManager.getRequest(socketAddress.getHostName(), socketAddress.getPort());
+
+        //Start up the HostClient which will sent packets to Server.
+        HostClient hostClient = new HostClient(request.getServerIP(), request.getServerPort(), ctx.channel()); // we are passing our channel to HostClient so It can write back the response messages
         hostClient.start();
-        this.channel = hostClient.getChannel();
+        this.remoteChannel = hostClient.getChannel();
 
     }
 
@@ -36,11 +38,11 @@ public class AgentServerChannelHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
 
-        if (channel != null) {
-            log.info("received packet from other agent");
+        if (remoteChannel != null) { // write to the opened channel
+            log.debug("received packet from agent {}, destinted for server {}", request.getClientAgentIP(), request.getServerIP());
             //byte[] m = (byte[] ) msg;
             //log.info(new String(m));
-            channel.writeAndFlush(msg); // will be moved to host client channel handler
+            remoteChannel.writeAndFlush(msg);
 
         }
         else {

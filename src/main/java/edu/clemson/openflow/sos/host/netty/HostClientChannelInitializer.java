@@ -7,14 +7,16 @@ import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
 
 public class HostClientChannelInitializer extends ChannelInitializer {
+
+    private Channel remoteChannel;
+    public HostClientChannelInitializer(Channel remoteChannel){
+        this.remoteChannel = remoteChannel;
+    }
     @Override
     protected void initChannel(Channel socketChannel) throws Exception {
-        socketChannel.pipeline().addLast("bytesDecoder",
-                new ByteArrayDecoder());
-        socketChannel.pipeline().addLast("hostClient", new HostClientChannelHandler());
-
-        // Encoder
-        //socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));
-        socketChannel.pipeline().addLast("bytesEncoder", new ByteArrayEncoder());
+        socketChannel.pipeline()
+                .addLast("bytesDecoder", new ByteArrayDecoder())
+                .addLast("hostClient", new HostClientChannelHandler(remoteChannel))
+                .addLast("bytesEncoder", new ByteArrayEncoder());
     }
 }

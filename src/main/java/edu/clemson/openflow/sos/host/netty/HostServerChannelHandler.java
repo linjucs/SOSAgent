@@ -5,6 +5,7 @@ import edu.clemson.openflow.sos.manager.RequestManager;
 import edu.clemson.openflow.sos.rest.RequestParser;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -24,7 +25,8 @@ import java.net.InetSocketAddress;
 public class HostServerChannelHandler extends ChannelInboundHandlerAdapter {
     private static final Logger log = LoggerFactory.getLogger(HostServerChannelHandler.class);
     private RequestParser request;
-    private Channel channel;
+
+    private Channel remoteChannel; // remote channel to write to
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -32,37 +34,41 @@ public class HostServerChannelHandler extends ChannelInboundHandlerAdapter {
         log.info("New host-side connection from {} at Port {}",
                 socketAddress.getHostName(),
                 socketAddress.getPort());
-        this.request = RequestManager.getRequest(socketAddress.getHostName(), socketAddress.getPort());
-        AgentClient agentClient = new AgentClient(request.getServerAgentIP());
+
+        RequestManager requestManager = RequestManager.INSTANCE;
+        this.request = requestManager.getRequest(socketAddress.getHostName(), socketAddress.getPort());
+
+        AgentClient agentClient = new AgentClient(request.getServerAgentIP(), ctx.channel()); // Also send my channel to AgentClient so It can write back on our behalf
         agentClient.start();
-        this.channel = agentClient.getChannel();
+        this.remoteChannel = agentClient.getRemoteChannel(); //Also get the remote channel so we can write to it
 
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        log.debug("got new packet from client {}", request.getClientAgentIP());
 
-        if (channel != null) {
-            log.info("got packet from client");
-
-            channel.writeAndFlush(msg); // will be moved to agent server channel handler
-
+        if (remoteChannel != null) {
+            remoteChannel.writeAndFlush(msg);
             }
             else {
             log.error("Couldn't connect to remote agent {}", request.getServerAgentIP());
         }
         ReferenceCountUtil.release(msg);
-
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        // Close the connection when an exception is raised.
         cause.printStackTrace();
         ctx.close();
     }
 
-    private void forwardMessage(ByteBuf msg) {
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
+
+    private void sendReplyBack() {
 
     }
 }

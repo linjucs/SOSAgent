@@ -8,16 +8,18 @@ import org.slf4j.LoggerFactory;
  *
  * Class to manage individual socket servers. i.e socket to handle sos-client, sos-server and
  * other sos-agents
+ * TODO: validate the request bofore adding it to pool. Return False incase of problem
  */
 public class SocketManager {
     private static final Logger log = LoggerFactory.getLogger(SocketManager.class);
 
 
     public boolean socketRequest(RequestParser request) {
-        // check all the logistics before adding request to pool i.e is the server running or not
-        // for now I am adding all requests to pool
-        RequestManager.addToPool(request);
+
+        RequestManager requestManager = RequestManager.INSTANCE;
+        requestManager.addToPool(request);
         log.debug("Added {} to the Request Pool", request.toString()); // need to override tostring yet
+
         return true;
     }
 
