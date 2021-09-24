@@ -130,13 +130,13 @@ def multiControllerNet():
     makeTerms([agent1, agent2, server1, client1])
 
     info( "*** Creating controllers\n" )
-    local = net.addController( 'localctl', port=6633 ) #controller for control network
-    local.start()
-    s3.start([local])
+    #local = net.addController( 'localctl', port=6633 ) #controller for control network
+    #local.start()
+    #s3.start([local])
 
     info("*** Assigning IP to host interface\n")
     #call ('sudo', '/sbin/ifconfig', 's3', '192.168.100.10/24', 'up', shell=True)
-    subprocess.Popen('sudo ifconfig s3 192.168.100.10/24 up', shell=True)
+    #subprocess.Popen('sudo ifconfig s3 192.168.100.10/24 up', shell=True)
 
     remote = RemoteController( 'remotectl', ip='192.168.100.10',
                                port=6653 ) #controller for data network (floodlight IP)
